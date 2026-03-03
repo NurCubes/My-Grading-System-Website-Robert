@@ -180,62 +180,47 @@ button:hover { transform: scale(1.1); }
 /* -----------------------------
    Responsive Styles for Mobile
    ----------------------------- */
-@media (max-width: 768px) {
+/* Very small screens (phones) */
+@media (max-width: 480px) {
     body {
-        padding: 10px;
-        align-items: center;
-    }
-
-    .main-wrapper {
-        flex-direction: column; /* stack cards vertically */
-        gap: 20px;
-        align-items: center;
-    }
-
-    .card, .records-card {
-        width: 95%; /* make cards fill most of the screen */
-        padding: 20px;
+        padding: 5px;
     }
 
     h2 {
-        font-size: 1.2em; /* smaller heading */
-    }
-
-    input, select {
-        width: 95%; /* make inputs almost full width */
-        font-size: 0.9em;
-    }
-
-    .subject-row {
-        flex-direction: column; /* stack subject inputs */
-        gap: 8px;
-    }
-    .subject-row input {
-        width: 100%;
-    }
-
-    button {
-        width: 100%; /* buttons full width on small screens */
-        padding: 12px;
         font-size: 1em;
     }
 
+    .card, .records-card {
+        width: 100%;
+        padding: 15px;
+    }
+
+    input, select {
+        font-size: 0.85em;
+        width: 100%;
+    }
+
+    .button {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+
     .anime-message img {
-        width: 80px; /* shrink images */
+        width: 60px;
     }
 
     .speech {
-        font-size: 0.8em; /* smaller speech bubble text */
-        padding: 8px 12px;
+        font-size: 0.75em;
+        padding: 6px 10px;
     }
 
     .excel-table {
-        font-size: 0.8em;
+        font-size: 0.75em;
     }
 
     .page-footer {
-        font-size: 0.9em;
-        padding: 8px 0;
+        font-size: 0.8em;
+        padding: 6px 0;
     }
 }
 
