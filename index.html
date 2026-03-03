@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Anime Student Grades</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -177,53 +179,56 @@ button:hover { transform: scale(1.1); }
     z-index: 1000;
 }
 
-/* -----------------------------
-   Responsive Styles for Mobile
-   ----------------------------- */
-/* Very small screens (phones) */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+
     body {
-        padding: 5px;
-    }
-
-    h2 {
-        font-size: 1em;
-    }
-
-    .card, .records-card {
-        width: 100%;
-        padding: 15px;
-    }
-
-    input, select {
-        font-size: 0.85em;
-        width: 100%;
-    }
-
-    .button {
-        font-size: 0.9em;
         padding: 10px;
+        align-items: flex-start;
+    }
+
+    .main-wrapper {
+        flex-direction: column;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .card,
+    .records-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    input,
+    select,
+    button {
+        width: 100%;
+    }
+
+    .subject-row {
+        flex-direction: column;
+    }
+
+    .subject-row input {
+        width: 100%;
+    }
+
+    .anime-message {
+        flex-direction: column;
+        text-align: center;
     }
 
     .anime-message img {
-        width: 60px;
-    }
-
-    .speech {
-        font-size: 0.75em;
-        padding: 6px 10px;
+        width: 80px;
     }
 
     .excel-table {
-        font-size: 0.75em;
+        font-size: 0.8em;
     }
 
     .page-footer {
-        font-size: 0.8em;
-        padding: 6px 0;
+        position: relative; /* IMPORTANT for mobile */
     }
 }
-
 </style>
 </head>
 <body>
