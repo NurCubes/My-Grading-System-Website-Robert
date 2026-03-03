@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Anime Student Grades</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: url(final.jpg) no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* MAIN WRAPPER */
+.main-wrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* CALCULATOR CARD */
+.card {
+    background: rgba(0,0,0,0.7);
+    border: 3px solid #fff;
+    border-radius: 25px;
+    width: 550px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+    animation: float 3s infinite alternate;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+h2 {
+    font-family: 'Press Start 2P', cursive;
+    color: #ffcb05;
+    text-shadow: 2px 2px #000;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+}
+
+input, select {
+    width: 80%;
+    padding: 8px;
+    margin: 6px 0;
+    border-radius: 12px;
+    border: none;
+    font-size: 0.95em;
+}
+
+.subject-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin: 5px 0; 
+}
+.subject-row input { width: 48%; }
+
+button {
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(45deg, #ff4d6d, #ffcb05);
+    color: #000;
+    transition: transform 0.2s;
+}
+button:hover { transform: scale(1.1); }
+
+.result { margin-top: 20px; }
+
+.progress {
+    width: 80%;
+    height: 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    margin: 10px auto;
+    overflow: hidden;
+}
+#bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #00f, #0ff);
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}
+
+/* Anime Messages */
+.anime-message {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+.anime-message img {
+    width: 110px;
+    border-radius: 12px;
+}
+.speech {
+    background: rgba(255,255,255,0.9);
+    color: #000;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+/* STUDENT RECORD CARD */
+.records-card {
+    background: rgba(0,0,0,0.75);
+    border: 3px solid #00ffff;
+    border-radius: 25px;
+    width: 700px;
+    padding: 20px;
+    box-shadow: 0 0 25px #00ffff;
+    color: white;
+    overflow-x: auto;
+    max-height: 90vh;
+}
+
+.records-card h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #ffcb05;
+}
+
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.excel-table th, .excel-table td {
+    border: 1px solid rgba(0,255,255,0.4);
+    padding: 8px 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.excel-table th {
+    background: linear-gradient(45deg, #ff4d6d, #ffcb05);
+    color: #000;
+}
+
+.excel-table td.average-cell {
+    font-weight: bold;
+    color: #00ff99;
+}
+
+
+.page-footer {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background: rgba(0,0,0,0.6);
+    color: #ffcb05;
+    font-weight: bold;
+    font-size: 1em;
+    text-shadow: 1px 1px #000;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="main-wrapper">
+
+<div class="card">
+    <h2>Student Grades Calculator</h2>
+
+    <input type="text" id="name" placeholder="Student Name">
+    <select id="course">
+        <option value="">Select Course</option>
+        <option value="BSIT">BSIT</option>
+        <option value="COMSI">COMSI</option>
+        <option value="EDUC">EDUC</option>
+        <option value="CRIM">CRIM</option>
+        <option value="HM">HM</option>
+        <option value="BSBA">BSBA</option>
+    </select>
+
+    <div class="subjects">
+        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
+        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
+        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
+        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
+        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
+        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
+    </div>
+
+    <button onclick="computeGrades()">Compute & Save</button>
+
+    <div class="result">
+        <h3 id="average"></h3>
+        <div class="progress"><div id="bar"></div></div>
+    </div>
+
+    <!-- Anime Messages -->
+    <div class="anime-message" id="high-message">
+        <img src="kakasi.gif">
+        <div class="speech">Kakashi: Good job! You'll be a Hokage someday!</div>
+    </div>
+
+    <div class="anime-message" id="medium-message">
+        <img src="thoorfin.gif">
+        <div class="speech">Thorfinn: I will come back better!</div>
+    </div>
+
+    <div class="anime-message" id="low-message">
+        <img src="vegeta.gif">
+        <div class="speech">Vegeta: You're better than this, don't give up!</div>
+    </div>
+
+    <div class="anime-message" id="super-message">
+        <img src="goku ayus.gif">
+        <div class="speech">Goku: Super Saiyan level performance!</div>
+    </div>
+
+    <div class="anime-message" id="adventure-message">
+        <img src="Lufy.gif">
+        <div class="speech">Luffy: Keep going! Adventure awaits!</div>
+    </div>
+</div>
+
+<!-- STUDENT RECORD CARD -->
+<div class="records-card">
+    <h3>Student Records</h3>
+    <div id="latest-record-container"></div>
+</div>
+
+</div>
+
+<footer class="page-footer">
+    @Robert Pilar JR BSIT 3 - A
+
+</footer>
+
+<script>
+let studentCounter = 0; // unique student numbers
+let allStudents = [];
+
+function computeGrades() {
+    const rows = document.querySelectorAll('.subject-row');
+    let total = 0, count = 0;
+    let subjects = [];
+
+    rows.forEach((row, index) => {
+        const gradeInput = row.querySelector('input[type="number"]');
+        const subjectInput = row.querySelector('input[placeholder="Subject"]');
+        const grade = parseFloat(gradeInput.value);
+        const subjectName = subjectInput.value || `Subject ${index + 1}`;
+
+        if (!isNaN(grade)) total += grade;
+        if (!isNaN(grade)) count++;
+
+        subjects.push({ subject: subjectName, grade: isNaN(grade) ? '-' : grade });
+    });
+
+    const avg = count ? (total / count).toFixed(2) : 0;
+
+    // Display average and progress bar
+    document.getElementById('average').innerText = `Average: ${avg}`;
+    document.getElementById('bar').style.width = avg + '%';
+
+    // Anime messages
+    document.querySelectorAll('.anime-message').forEach(msg => msg.style.display = 'none');
+    if (avg >= 95) document.getElementById('high-message').style.display = 'flex';
+    else if (avg >= 85) {
+        document.getElementById('super-message').style.display = 'flex';
+        document.getElementById('adventure-message').style.display = 'flex';
+    } else if (avg >= 75) document.getElementById('medium-message').style.display = 'flex';
+    else document.getElementById('low-message').style.display = 'flex';
+
+    const name = document.getElementById('name').value || "Unknown";
+    const course = document.getElementById('course').value || "Unknown";
+
+    saveToDatabase(name, course, subjects, avg);
+
+    // Reset form fields
+    document.getElementById('name').value = '';
+    document.getElementById('course').selectedIndex = 0;
+    rows.forEach(row => {
+        row.querySelector('input[type="number"]').value = '';
+        row.querySelector('input[placeholder="Subject"]').value = '';
+    });
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBTiJcl5EQVQXAzv_rC7O_9JxaCFC495F8",
+    authDomain: "grading-system-94ed7.firebaseapp.com",
+    databaseURL: "https://grading-system-94ed7-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "grading-system-94ed7",
+    storageBucket: "grading-system-94ed7.appspot.com",
+    messagingSenderId: "999652412217",
+    appId: "1:999652412217:web:88d04f6a0d34e640b876e8"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.saveToDatabase = function(name, course, subjects, average) {
+    const studentRef = push(ref(db, 'students'));
+    set(studentRef, {
+        name, course, subjects, average, timestamp: Date.now()
+    });
+
+    studentCounter++;
+    allStudents.push({ id: studentCounter, name, course, subjects, average });
+
+    const container = document.getElementById('latest-record-container');
+    
+    // Create separate table per student
+    const studentBox = document.createElement('div');
+    studentBox.innerHTML = `
+        <table class="excel-table">
+            <tr>
+                <th colspan="2">Student #${studentCounter}</th>
+                <th>Course</th>
+                ${subjects.map(sub => `<th>${sub.subject}</th>`).join('')}
+                <th>Average</th>
+            </tr>
+            <tr>
+                <td colspan="2">${name}</td>
+                <td>${course}</td>
+                ${subjects.map(sub => `<td>${sub.grade}</td>`).join('')}
+                <td class="average-cell">${average}</td>
+            </tr>
+        </table>
+        <br/>
+    `;
+    container.appendChild(studentBox);
+};
+</script>
