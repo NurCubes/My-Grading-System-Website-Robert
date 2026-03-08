@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+OKAY NOW THAT IS THE FUNCTION I NEEDED HERES MY ORIGINAL CODE YOUVE REMOVED SOME OF MY DESIGNS I JUST WANT YOU TO ADD THAT FUNCTION GIVE ME THE WHOLE CODES <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -250,14 +250,13 @@ button:hover { transform: scale(1.1); }
     </select>
 
     <div class="subjects">
-        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
-        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
-        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
-        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
-        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
-        <div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade"></div>
-    </div>
-
+<div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade" oninput="limitGrade(this)"></div>
+<div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade" oninput="limitGrade(this)"></div>
+<div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade" oninput="limitGrade(this)"></div>
+<div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade" oninput="limitGrade(this)"></div>
+<div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade" oninput="limitGrade(this)"></div>
+<div class="subject-row"><input placeholder="Subject"><input type="number" placeholder="Grade" oninput="limitGrade(this)"></div>
+</div>
     <button onclick="computeGrades()">Compute & Save</button>
 
     <div class="result">
@@ -306,9 +305,81 @@ button:hover { transform: scale(1.1); }
 </footer>
 
 <script>
-let studentCounter = 0; // unique student numbers
+let studentCounter = 0;
 let allStudents = [];
+let subjectsLocked = false;
 
+/* LIMIT GRADE DIGITS */
+function limitGrade(input){
+    if(input.value.length > 2){
+        input.value = input.value.slice(0,2);
+    }
+}
+
+/* LOAD SUBJECTS + COURSE FROM LOCALSTORAGE */
+window.onload = function(){
+    const rows = document.querySelectorAll('.subject-row');
+    const courseSelect = document.getElementById('course');
+
+    rows.forEach((row, index) => {
+        const subjectInput = row.querySelector('input[placeholder="Subject"]');
+        const savedSubject = localStorage.getItem("subject_" + index);
+        if(savedSubject){
+            subjectInput.value = savedSubject;
+            subjectInput.setAttribute('readonly', true);
+            subjectInput.style.background = 'rgba(0,0,0,0.5)';
+            subjectInput.style.color = '#fff';
+            subjectsLocked = true;
+        }
+    });
+
+    const savedCourse = localStorage.getItem("course_saved");
+    if(savedCourse){
+        courseSelect.value = savedCourse;
+        courseSelect.setAttribute('disabled', true);
+        courseSelect.style.background = 'rgba(0,0,0,0.5)';
+        courseSelect.style.color = '#fff';
+        subjectsLocked = true;
+    }
+};
+
+/* TOGGLE SUBJECT + COURSE LOCK/UNLOCK WITH "R" KEY */
+document.addEventListener('keydown', function(e){
+    if(e.key.toLowerCase() === 'r'){
+        const rows = document.querySelectorAll('.subject-row');
+        const courseSelect = document.getElementById('course');
+
+        if(subjectsLocked){
+            // Unlock for editing
+            rows.forEach(row => {
+                const subjectInput = row.querySelector('input[placeholder="Subject"]');
+                subjectInput.removeAttribute('readonly');
+                subjectInput.style.background = 'rgba(0,0,0,0.7)';
+                subjectInput.style.color = '#fff';
+            });
+            courseSelect.removeAttribute('disabled');
+            courseSelect.style.background = 'rgba(0,0,0,0.7)';
+            courseSelect.style.color = '#fff';
+            subjectsLocked = false;
+        } else {
+            // Lock subjects & course again and save to localStorage
+            rows.forEach((row, index) => {
+                const subjectInput = row.querySelector('input[placeholder="Subject"]');
+                subjectInput.setAttribute('readonly', true);
+                subjectInput.style.background = 'rgba(0,0,0,0.5)';
+                subjectInput.style.color = '#fff';
+                localStorage.setItem("subject_" + index, subjectInput.value);
+            });
+            courseSelect.setAttribute('disabled', true);
+            courseSelect.style.background = 'rgba(0,0,0,0.5)';
+            courseSelect.style.color = '#fff';
+            localStorage.setItem("course_saved", courseSelect.value);
+            subjectsLocked = true;
+        }
+    }
+});
+
+/* COMPUTE GRADES */
 function computeGrades() {
     const rows = document.querySelectorAll('.subject-row');
     let total = 0, count = 0;
@@ -328,17 +399,16 @@ function computeGrades() {
 
     const avg = count ? (total / count).toFixed(2) : 0;
 
-    // Display average and progress bar
     document.getElementById('average').innerText = `Average: ${avg}`;
     document.getElementById('bar').style.width = avg + '%';
 
-    // Anime messages
     document.querySelectorAll('.anime-message').forEach(msg => msg.style.display = 'none');
     if (avg >= 95) document.getElementById('high-message').style.display = 'flex';
     else if (avg >= 85) {
         document.getElementById('super-message').style.display = 'flex';
         document.getElementById('adventure-message').style.display = 'flex';
-    } else if (avg >= 75) document.getElementById('medium-message').style.display = 'flex';
+    }
+    else if (avg >= 75) document.getElementById('medium-message').style.display = 'flex';
     else document.getElementById('low-message').style.display = 'flex';
 
     const name = document.getElementById('name').value || "Unknown";
@@ -346,13 +416,9 @@ function computeGrades() {
 
     saveToDatabase(name, course, subjects, avg);
 
-    // Reset form fields
+    // Reset name + grades
     document.getElementById('name').value = '';
-    document.getElementById('course').selectedIndex = 0;
-    rows.forEach(row => {
-        row.querySelector('input[type="number"]').value = '';
-        row.querySelector('input[placeholder="Subject"]').value = '';
-    });
+    rows.forEach(row => row.querySelector('input[type="number"]').value = '');
 }
 </script>
 
@@ -375,16 +441,12 @@ const db = getDatabase(app);
 
 window.saveToDatabase = function(name, course, subjects, average) {
     const studentRef = push(ref(db, 'students'));
-    set(studentRef, {
-        name, course, subjects, average, timestamp: Date.now()
-    });
+    set(studentRef, { name, course, subjects, average, timestamp: Date.now() });
 
     studentCounter++;
     allStudents.push({ id: studentCounter, name, course, subjects, average });
 
     const container = document.getElementById('latest-record-container');
-    
-    // Create separate table per student
     const studentBox = document.createElement('div');
     studentBox.innerHTML = `
         <table class="excel-table">
